@@ -1,1 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hexca Web | Cyber Community</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #050a05;
+            --neon-green: #00ff00;
+            --neon-green-dim: rgba(0, 255, 0, 0.2);
+            --text-main: #e0e0e0;
+            --text-muted: #888;
+            --card-bg: rgba(0, 255, 0, 0.03);
+            --glass-border: rgba(0, 255, 0, 0.15);
+            --font-heading: 'Orbitron', sans-serif;
+            --font-body: 'Share Tech Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            line-height: 1.6;
+            background-image: 
+                linear-gradient(var(--neon-green-dim) 1px, transparent 1px),
+                linear-gradient(90deg, var(--neon-green-dim) 1px, transparent 1px);
+            background-size: 30px 30px;
+            background-position: center center;
+            background-attachment: fixed;
+        }
+
+        /* Scanline Effect */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-heading);
+            color: var(--neon-green);
+            text-shadow: 0 0 5px var(--neon-green);
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* Loading Screen */
+        #loader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease-out;
+        }
+        
+        #loader .logo {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            color: var(--neon-green);
+            text-shadow: 0 0 15px var(--neon-green), 0 0 30px var(--neon-green);
+            margin-bottom: 30px;
+            animation: pulseGlow 2s infinite alternate;
+        }
+
+        #loader .terminal-text {
+            color: var(--neon-green);
+            font-size: 1.1rem;
+            text-align: left;
+            width: 300px;
+            height: 150px;
+        }
+        
+        #loader .countdown {
+            margin-top: 20px;
+            font-size: 2rem;
+            font-family: var(--font-heading);
+            color: var(--neon-green);
+        }
+
+        /* Header / Desktop Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid var(--neon-green-dim);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--neon-green);
+            font-weight: 700;
+            text-shadow: 0 0 8px var(--neon-green);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .desktop-nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: var(--text-main);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--neon-green);
+            text-shadow: 0 0 8px var(--neon-green);
+        }
+
+        /* Mobile Bottom Nav */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            border-top: 1px solid var(--neon-green-dim);
+            padding: 12px 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .mobile-nav-item {
+            flex: 1;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .mobile-nav-item i { font-size: 1.3rem; }
+        .mobile-nav-item.active, .mobile-nav-item:hover {
+            color: var(--neon-green);
+            text-shadow: 0 0 5px var(--neon-green);
+        }
+
+        /* Main Content Area */
+        main {
+            padding: 40px 5% 100px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: calc(100vh - 150px);
+        }
+
+        .page-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .page-section.active { display: block; }
+
+        /* Reusable Components */
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 30px;
+            backdrop-filter: blur(5px);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            box-shadow: 0 0 15px var(--neon-green-dim);
+            border-color: var(--neon-green);
+        }
+
+        .btn-cyber {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            color: var(--neon-green);
+            border: 1px solid var(--neon-green);
+            padding: 12px 25px;
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 4px;
+            box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.1);
+        }
+        .btn-cyber:hover {
+            background: var(--neon-green);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon-green);
+        }
+
+        /* Home Section */
+        #home .hero {
+            text-align: center;
+            padding: 40px 0;
+        }
+        #home .hero h1 { font-size: 3.5rem; margin-bottom: 5px; }
+        .status-text { color: var(--neon-green); font-size: 0.9rem; margin-bottom: 30px; letter-spacing: 2px;}
+        .creator-text {
+            display: inline-block;
+            background: rgba(0, 255, 0, 0.1);
+            padding: 10px 20px;
+            border-left: 4px solid var(--neon-green);
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+        .feature-list {
+            list-style: none;
+            text-align: left;
+            display: inline-block;
+            margin-bottom: 40px;
+        }
+        .feature-list li {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        .feature-list i { color: var(--neon-green); margin-right: 15px; }
+
+        /* Social Section */
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .social-card {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .social-card i {
+            font-size: 3.5rem;
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+        .social-card h3 { margin: 0; }
+        .social-card p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px; }
+
+        /* About Section (Language Blocks) */
+        .lang-blocks {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .lang-box {
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 3px solid var(--neon-green);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        .lang-box span { display: block; font-size: 0.8rem; color: var(--neon-green); margin-bottom: 5px; text-transform: uppercase;}
+        
+        .disclaimer-box {
+            border: 1px solid #ff4444;
+            background: rgba(255, 0, 0, 0.05);
+            box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.1);
+        }
+        .disclaimer-box h3, .disclaimer-box i { color: #ff4444; text-shadow: 0 0 5px #ff4444; }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 1px solid var(--neon-green-dim);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        footer span { color: var(--neon-green); }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulseGlow { from { text-shadow: 0 0 10px var(--neon-green); } to { text-shadow: 0 0 20px var(--neon-green), 0 0 40px var(--neon-green); } }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .desktop-nav { display: none; }
+            .mobile-nav { display: flex; }
+            #home .hero h1 { font-size: 2.2rem; }
+            main { padding-bottom: 90px; } /* Space for mobile nav */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="logo"><i class="fa-solid fa-network-wired"></i> HEXCA WEB</div>
+        <div class="terminal-text" id="term-text"></div>
+        <div class="countdown" id="countdown">5</div>
+    </div>
+
+    <!-- Header (Desktop) -->
+    <header>
+        <div class="brand">
+            <i class="fa-solid fa-code"></i> HEXCA WEB
+        </div>
+        <nav class="desktop-nav">
+            <span class="nav-link active" onclick="switchTab('home')">HOME</span>
+            <span class="nav-link" onclick="switchTab('social')">SOCIAL</span>
+            <span class="nav-link" onclick="switchTab('about')">ABOUT</span>
+            <span class="nav-link" onclick="switchTab('privacy')">PRIVACY</span>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        
+        <!-- HOME SECTION -->
+        <section id="home" class="page-section active">
+            <div class="hero">
+                <h1>WELCOME TO HEXCA WEB</h1>
+                <p class="status-text">[ SECURE CONNECTION ESTABLISHED • COMMUNITY PORTAL ]</p>
+                
+                <p class="creator-text">MODIFIED BY:— SAMIM AKTAR (SSK)</p>
+                <br>
+                
+                <ul class="feature-list">
+                    <li><i class="fa-solid fa-shield-check"></i> Completely safe and free community access.</li>
+                    <li><i class="fa-solid fa-share-nodes"></i> Share with your friends and grow the network!</li>
+                    <li><i class="fa-solid fa-book-journal-whills"></i> Learn, explore and stay updated on tech.</li>
+                </ul>
+                <br>
+                
+                <a href="https://t.me/" target="_blank" class="btn-cyber">
+                    <i class="fa-brands fa-telegram"></i> ANY QUESTION? CONTACT TELEGRAM
+                </a>
+            </div>
+        </section>
+
+        <!-- SOCIAL SECTION -->
+        <section id="social" class="page-section">
+            <h2><i class="fa-solid fa-hashtag"></i> OUR NETWORK</h2>
+            <p>Connect with the Hexca Web community across multiple platforms.</p>
+            
+            <div class="social-grid">
+                <div class="glass-card social-card">
+                    <i class="fa-brands fa-youtube"></i>
+                    <h3>YouTube</h3>
+                    <p>Watch our latest tech tutorials and cyber guides.</p>
+                    <a href="https://youtube.com/" target="_blank" class="btn-cyber">Subscribe</a>
+                </div>
+                
+                <div class="glass-card social-card">
+                    <i class="fa-brands fa-telegram"></i>
+                    <h3>Telegram</h3>
+                    <p>Join our official channel for real-time updates and files.</p>
+                    <a href="https://t.me/" target="_blank" class="btn-cyber">Join Channel</a>
+                </div>
+                
+                <div class="glass-card social-card">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <h3>WhatsApp</h3>
+                    <p>Get instant community alerts directly on WhatsApp.</p>
+                    <a href="https://whatsapp.com/" target="_blank" class="btn-cyber">Join Group</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT SECTION -->
+        <section id="about" class="page-section">
+            <h2><i class="fa-solid fa-circle-info"></i> ABOUT HEXCA WEB</h2>
+            
+            <div class="glass-card">
+                <h3>Community Information</h3>
+                <p>Hexca Web is a technology and tutorial community focused on cyber education, system awareness, and modern tech skills.</p>
+                
+                <div class="lang-blocks">
+                    <div class="lang-box">
+                        <span>ENGLISH</span>
+                        We provide tutorials, educational information, and community updates to help you learn responsibly.
+                    </div>
+                    <div class="lang-box">
+                        <span>বাংলা (BENGALI)</span>
+                        আমরা টিউটোরিয়াল, শিক্ষামূলক তথ্য এবং কমিউনিটি আপডেট প্রদান করি যাতে আপনি দায়িত্বের সাথে শিখতে পারেন।
+                    </div>
+                    <div class="lang-box">
+                        <span>हिन्दी (HINDI)</span>
+                        हम ट्यूटोरियल, शैक्षिक जानकारी और सामुदायिक अपडेट प्रदान करते हैं ताकि आप जिम्मेदारी से सीख सकें।
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card disclaimer-box">
+                <h3><i class="fa-solid fa-triangle-exclamation"></i> DISCLAIMER & SAFETY</h3>
+                <p><strong>Educational Purposes Only:</strong> Content provided by Hexca Web is strictly for educational and informational purposes. We do not encourage illegal activity, unauthorized access, malware distribution, or abuse of any service.</p>
+                <br>
+                <p><strong>Safety Warning:</strong> Learn responsibly. Always protect your own accounts and devices. Only test systems, networks, or applications that you own or have explicit written permission to test.</p>
+            </div>
+        </section>
+
+        <!-- PRIVACY SECTION -->
+        <section id="privacy" class="page-section">
+            <h2><i class="fa-solid fa-user-shield"></i> PRIVACY POLICY</h2>
+            
+            <div class="glass-card">
+                <h3>Your Data is Safe</h3>
+                <p>Hexca Web respects your privacy. Please note the following regarding your usage of this portal:</p>
+                <br>
+                <ul>
+                    <li><i class="fa-solid fa-check" style="color:var(--neon-green)"></i> <strong>Static Website:</strong> This is a static, frontend-only website. We do not have a database.</li>
+                    <li><i class="fa-solid fa-check" style="color:var(--neon-green)"></i> <strong>No Accounts Required:</strong> Users do not need to create an account, log in, or provide personal information to browse the site.</li>
+                    <li><i class="fa-solid fa-check" style="color:var(--neon-green)"></i> <strong>No Tracking:</strong> We do not deploy hidden tracking scripts to monitor your activity.</li>
+                    <li><i class="fa-solid fa-check" style="color:var(--neon-green)"></i> <strong>External Links:</strong> Social platforms (YouTube, Telegram, WhatsApp) opened from this website have their own independent privacy policies.</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Hexca Web / HW Tutorials Branding</p>
+        <p>&copy; <span id="year"></span> Hexca Web • All Rights Reserved.</p>
+    </footer>
+
+    <!-- Mobile Navigation (Bottom) -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-item active" onclick="switchTab('home')">
+            <i class="fa-solid fa-house"></i>
+            <span>HOME</span>
+        </div>
+        <div class="mobile-nav-item" onclick="switchTab('social')">
+            <i class="fa-solid fa-hashtag"></i>
+            <span>SOCIAL</span>
+        </div>
+        <div class="mobile-nav-item" onclick="switchTab('about')">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>ABOUT</span>
+        </div>
+        <div class="mobile-nav-item" onclick="switchTab('privacy')">
+            <i class="fa-solid fa-shield"></i>
+            <span>PRIVACY</span>
+        </div>
+    </nav>
+
+    <!-- JavaScript -->
+    <script>
+        // Set Current Year in Footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Terminal Loading Screen Logic
+        const bootMessages = [
+            "> Initializing Hexca Web environment...",
+            "> Loading secure modules...",
+            "> Bypassing visual noise...",
+            "> Checking system integrity...",
+            "> Establishing encrypted connection...",
+            "> Access Granted. System Ready."
+        ];
+        
+        const termText = document.getElementById('term-text');
+        let msgIndex = 0;
+        
+        const typeInterval = setInterval(() => {
+            if (msgIndex < bootMessages.length) {
+                termText.innerHTML += bootMessages[msgIndex] + "<br>";
+                msgIndex++;
+            }
+        }, 600);
+
+        // Countdown Logic
+        let count = 5;
+        const countDisplay = document.getElementById('countdown');
+        const countInterval = setInterval(() => {
+            count--;
+            if (count > 0) {
+                countDisplay.textContent = count;
+            } else {
+                clearInterval(countInterval);
+                clearInterval(typeInterval);
+                countDisplay.textContent = "READY";
+                
+                // Fade out loader
+                setTimeout(() => {
+                    const loader = document.getElementById('loader');
+                    loader.style.opacity = '0';
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                    }, 800);
+                }, 500);
+            }
+        }, 1000);
+
+        // Navigation / Tab Switching Logic
+        function switchTab(tabId) {
+            // Hide all sections
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show target section
+            document.getElementById(tabId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Update Desktop Nav Active State
+            document.querySelectorAll('.desktop-nav .nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.textContent.toLowerCase() === tabId) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Update Mobile Nav Active State
+            document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                item.classList.remove('active');
+                const spanText = item.querySelector('span').textContent.toLowerCase();
+                if (spanText === tabId) {
+                    item.classList.add('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
 
