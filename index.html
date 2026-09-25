@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="description"
+        content="Hexca Web Community — tutorials, useful updates, apps and community news.">
+
+  <meta name="theme-color" content="#010502">
+
+  <title>Hexca Web | Community</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --green: #00ff55;
+      --green-soft: #00c943;
+      --dark: #010502;
+      --dark-2: #020a05;
+      --card: rgba(0, 15, 7, 0.88);
+      --border: rgba(0, 255, 85, 0.25);
+      --text: #e8fff0;
+      --muted: #7ca88a;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(0,255,85,.08), transparent 35%),
+        linear-gradient(135deg, #010502, #020b05 50%, #010502);
+      color: var(--text);
+      font-family: "Share Tech Mono", monospace;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .12;
+      background-image:
+        linear-gradient(rgba(0,255,85,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,85,.08) 1px, transparent 1px);
+      background-size: 35px 35px;
+      z-index: -2;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 3px,
+        rgba(0,255,85,.018) 4px
+      );
+      z-index: 999;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    /* =========================
+       LOADER
+    ========================= */
+
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at center, rgba(0,255,85,.08), transparent 45%),
+        #010502;
+      transition: opacity .6s ease, visibility .6s ease;
+    }
+
+    #loader.hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-box {
+      width: min(92%, 520px);
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    .loader-logo {
+      width: 110px;
+      height: 110px;
+      object-fit: contain;
+      filter:
+        drop-shadow(0 0 8px var(--green))
+        drop-shadow(0 0 25px rgba(0,255,85,.55));
+      animation: pulse 1.8s infinite;
+    }
+
+    .loader-title {
+      margin-top: 20px;
+      font-family: Orbitron, sans-serif;
+      font-size: clamp(22px, 5vw, 36px);
+      color: var(--green);
+      text-shadow: 0 0 12px rgba(0,255,85,.6);
+      letter-spacing: 2px;
+    }
+
+    .loader-status {
+      margin-top: 12px;
+      color: #83b995;
+      font-size: 13px;
+    }
+
+    .terminal {
+      margin: 25px auto 0;
+      text-align: left;
+      max-width: 430px;
+      color: #63ff8c;
+      font-size: 13px;
+      line-height: 1.9;
+      min-height: 120px;
+    }
+
+    .countdown {
+      margin-top: 18px;
+      color: var(--green);
+      font-size: 18px;
+    }
+
+    @keyframes pulse {
+      0%,100% {
+        transform: scale(1);
+        filter:
+          drop-shadow(0 0 8px var(--green))
+          drop-shadow(0 0 20px rgba(0,255,85,.4));
+      }
+
+      50% {
+        transform: scale(1.05);
+        filter:
+          drop-shadow(0 0 15px var(--green))
+          drop-shadow(0 0 35px rgba(0,255,85,.65));
+      }
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 500;
+      background: rgba(1,5,2,.88);
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      width: min(1200px, 94%);
+      margin: auto;
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: Orbitron, sans-serif;
+      color: var(--green);
+      font-weight: 700;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .brand img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 8px rgba(0,255,85,.7));
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    nav a {
+      padding: 10px 13px;
+      border-radius: 8px;
+      color: #a9cdb3;
+      transition: .25s;
+      font-size: 13px;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: var(--green);
+      background: rgba(0,255,85,.07);
+      box-shadow: 0 0 14px rgba(0,255,85,.12);
+    }
+
+    /* =========================
+       MAIN
+    ========================= */
+
+    main {
+      width: min(1100px, 94%);
+      margin: auto;
+      padding-bottom: 100px;
+    }
+
+    .page {
+      display: none;
+      padding: 60px 0;
+      animation: pageIn .35s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes pageIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* =========================
+       HOME
+    ========================= */
+
+    .hero {
+      text-align: center;
+      padding: 55px 15px 35px;
+    }
+
+    .hero-logo {
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+      filter:
+        drop-shadow(0 0 10px var(--green))
+        drop-shadow(0 0 30px rgba(0,255,85,.4));
+      animation: pulse 2.5s infinite;
+    }
+
+    .hero h1 {
+      margin-top: 24px;
+      font-family: Orbitron, sans-serif;
+      font-size: clamp(28px, 6vw, 52px);
+      color: var(--green);
+      text-shadow: 0 0 18px rgba(0,255,85,.5);
+      letter-spacing: 2px;
+    }
+
+    .hero-sub {
+      margin-top: 10px;
+      color: #76a984;
+      letter-spacing: 1px;
+      font-size: 13px;
+    }
+
+    .hero-description {
+      max-width: 700px;
+      margin: 25px auto;
+      line-height: 1.8;
+      color: #b9d7c1;
+    }
+
+    .modified {
+      margin: 22px 0;
+      line-height: 1.7;
+    }
+
+    .modified span {
+      display: block;
+      color: var(--muted);
+    }
+
+    .modified strong {
+      color: var(--green);
+      text-shadow: 0 0 8px rgba(0,255,85,.4);
+    }
+
+    .checks {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin: 25px 0;
+    }
+
+    .check {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: rgba(0,255,85,.035);
+      color: #a9d7b4;
+      font-size: 12px;
+    }
+
+    .check i {
+      color: var(--green);
+      margin-right: 5px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 25px 0 40px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 12px 18px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      color: var(--green);
+      background: rgba(0,255,85,.05);
+      cursor: pointer;
+      transition: .25s;
+    }
+
+    .btn:hover {
+      background: rgba(0,255,85,.12);
+      box-shadow: 0 0 18px rgba(0,255,85,.2);
+      transform: translateY(-2px);
+    }
+
+    .btn.primary {
+      background: rgba(0,255,85,.13);
+      border-color: rgba(0,255,85,.55);
+    }
+
+    /* =========================
+       SEARCH
+    ========================= */
+
+    .search-box {
+      max-width: 750px;
+      margin: 0 auto 35px;
+      position: relative;
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--green);
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 14px 15px 14px 45px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      outline: none;
+      color: white;
+      background: rgba(0,0,0,.35);
+    }
+
+    .search-box input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 15px rgba(0,255,85,.12);
+    }
+
+    /* =========================
+       SECTION TITLES
+    ========================= */
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .section-title h2 {
+      font-family: Orbitron, sans-serif;
+      color: var(--green);
+      font-size: clamp(23px, 5vw, 34px);
+      text-shadow: 0 0 12px rgba(0,255,85,.35);
+    }
+
+    .section-title p {
+      margin-top: 8px;
+      color: var(--muted);
+    }
+
+    /* =========================
+       CARDS
+    ========================= */
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      transition: .3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 1px;
+      background: var(--green);
+      box-shadow: 0 0 15px var(--green);
+      transition: .5s;
+    }
+
+    .card:hover::before {
+      left: 100%;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0,255,85,.5);
+      box-shadow: 0 0 25px rgba(0,255,85,.08);
+    }
+
+    .card-icon {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: rgba(0,255,85,.07);
+      border: 1px solid var(--border);
+      color: var(--green);
+      font-size: 27px;
+      margin-bottom: 15px;
+    }
+
+    .card h3 {
+      color: #e7fff0;
+      margin-bottom: 8px;
+      font-family: Orbitron, sans-serif;
+      font-size: 16px;
+    }
+
+    .card p {
+      color: #8eb49a;
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+    .card-btn {
+      display: inline-flex;
+      margin-top: 15px;
+      color: var(--green);
+      font-size: 13px;
+    }
+
+    /* =========================
+       VIDEO
+    ========================= */
+
+    .video-card iframe {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border: 0;
+      border-radius: 10px;
+      background: #000;
+    }
+
+    .video-title {
+      margin-top: 12px;
+      color: white;
+      font-size: 14px;
+    }
+
+    /* =========================
+       APK
+    ========================= */
+
+    .apk-icon {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      display: grid;
+      place-items: center;
+      color: var(--green);
+      font-size: 32px;
+      margin-bottom: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(0,255,85,.04);
+    }
+
+    .apk-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      color: #91cba1;
+      border: 1px solid var(--border);
+      background: rgba(0,255,85,.04);
+    }
+
+    /* =========================
+       CONTENT
+    ========================= */
+
+    .content-box {
+      max-width: 850px;
+      margin: auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 28px;
+      line-height: 1.9;
+      color: #b9d5c0;
+    }
+
+    .content-box h3 {
+      color: var(--green);
+      font-family: Orbitron, sans-serif;
+      margin-bottom: 15px;
+    }
+
+    .content-box p {
+      margin-bottom: 15px;
+    }
+
+    .disclaimer {
+      border-left: 3px solid var(--green);
+      padding-left: 15px;
+      color: #a7cdb1;
+    }
+
+    /* =========================
+       BIO
+    ========================= */
+
+    .bio-card {
+      max-width: 600px;
+      margin: auto;
+      text-align: center;
+    }
+
+    .bio-logo {
+      width: 130px;
+      height: 130px;
+      object-fit: contain;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 0 15px rgba(0,255,85,.5));
+    }
+
+    .bio-name {
+      color: var(--green);
+      font-family: Orbitron, sans-serif;
+      font-size: 24px;
+    }
+
+    .bio-info {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .bio-row {
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(0,255,85,.1);
+    }
+
+    .bio-row strong {
+      color: var(--green);
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 15px 100px;
+      text-align: center;
+      color: #648c70;
+    }
+
+    .footer-logo {
+      width: 55px;
+      height: 55px;
+      object-fit: contain;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 0 8px rgba(0,255,85,.45));
+    }
+
+    .footer-social {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 18px 0;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--green);
+      transition: .25s;
+    }
+
+    .footer-social a:hover {
+      background: rgba(0,255,85,.1);
+      box-shadow: 0 0 15px rgba(0,255,85,.2);
+    }
+
+    /* =========================
+       MOBILE NAV
+    ========================= */
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 800;
+      padding: 8px;
+      background: rgba(1,5,2,.94);
+      backdrop-filter: blur(15px);
+      border-top: 1px solid var(--border);
+    }
+
+    .mobile-nav-inner {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    .mobile-nav a,
+    .more-btn {
+      border: 0;
+      background: transparent;
+      color: #779b82;
+      padding: 7px 3px;
+      text-align: center;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .mobile-nav i {
+      display: block;
+      font-size: 17px;
+      margin-bottom: 4px;
+    }
+
+    .mobile-nav a.active,
+    .more-btn.active {
+      color: var(--green);
+      text-shadow: 0 0 8px rgba(0,255,85,.5);
+    }
+
+    .more-menu {
+      display: none;
+      position: absolute;
+      right: 10px;
+      bottom: 65px;
+      min-width: 150px;
+      background: #020a05;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 25px rgba(0,0,0,.5);
+    }
+
+    .more-menu.show {
+      display: block;
+    }
+
+    .more-menu a {
+      display: block;
+      padding: 13px;
+      color: #9fc5a9;
+      border-bottom: 1px solid rgba(0,255,85,.08);
+    }
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0,0,0,.78);
+      backdrop-filter: blur(8px);
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      width: min(700px, 100%);
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #020905;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 0 40px rgba(0,255,85,.08);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 15px;
+      border: 0;
+      background: transparent;
+      color: #8fb39a;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .modal h2 {
+      color: var(--green);
+      font-family: Orbitron, sans-serif;
+      margin-bottom: 20px;
+    }
+
+    /* =========================
+       EMPTY STATE
+    ========================= */
+
+    .empty {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 35px;
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      color: #658c70;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 850px) {
+      nav {
+        display: none;
+      }
+
+      .mobile-nav {
+        display: block;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      footer {
+        padding-bottom: 100px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .header-inner {
+        min-height: 62px;
+      }
+
+      .brand {
+        font-size: 13px;
+      }
+
+      .brand img {
+        width: 35px;
+        height: 35px;
+      }
+
+      .page {
+        padding: 40px 0;
+      }
+
+      .hero {
+        padding-top: 35px;
+      }
+
+      .hero-logo {
+        width: 120px;
+        height: 120px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .content-box {
+        padding: 20px;
+      }
+
+      .checks {
+        flex-direction: column;
+      }
+
+      .check {
+        width: 100%;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =========================
+       LOADER
+  ========================= -->
+
+  <div id="loader">
+    <div class="loader-box">
+
+      <img
+        src="logo.png"
+        alt="Hexca Web Logo"
+        class="loader-logo"
+        onerror="this.style.display='none'"
+      >
+
+      <div class="loader-title">
+        WELCOME TO HEXCA WEB
+      </div>
+
+      <div class="loader-status">
+        SECURE CONNECTION • COMMUNITY PORTAL
+      </div>
+
+      <div class="terminal">
+        <div>&gt; Initializing Hexca Web Community...</div>
+        <div>&gt; Loading modules...</div>
+        <div>&gt; Checking system...</div>
+        <div>&gt; Establishing connection...</div>
+        <div>&gt; Ready.</div>
+      </div>
+
+      <div class="countdown">
+        Opening community in <span id="countdown">5</span>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- =========================
+       HEADER
+  ========================= -->
+
+  <header>
+
+    <div class="header-inner">
+
+      <a href="#home" class="brand" onclick="showPage('home')">
+
+        <img
+          src="logo.png"
+          alt="Hexca Web"
+          onerror="this.style.display='none'"
+        >
+
+        <span>HEXCA WEB</span>
+
+      </a>
+
+      <nav>
+
+        <a href="#home" data-page="home" class="active">
+          HOME
+        </a>
+
+        <a href="#social" data-page="social">
+          SOCIAL
+        </a>
+
+        <a href="#apk" data-page="apk">
+          APK LINKS
+        </a>
+
+        <a href="#about" data-page="about">
+          ABOUT
+        </a>
+
+        <a href="#privacy" data-page="privacy">
+          PRIVACY
+        </a>
+
+        <a href="#bio" data-page="bio">
+          MY BIO
+        </a>
+
+      </nav>
+
+    </div>
+
+  </header>
+
+
+  <!-- =========================
+       MAIN
+  ========================= -->
+
+  <main>
+
+    <!-- HOME -->
+
+    <section id="home" class="page active">
+
+      <div class="hero">
+
+        <img
+          src="logo.png"
+          alt="Hexca Web"
+          class="hero-logo"
+          onerror="this.style.display='none'"
+        >
+
+        <h1>Welcome to Hexca Web</h1>
+
+        <div class="hero-sub">
+          TECH • TUTORIALS • COMMUNITY
+        </div>
+
+        <p class="hero-description">
+          Join our community for tutorials, useful updates,
+          apps and community news.
+        </p>
+
+        <div class="modified">
+
+          <span>MODIFIED BY:—</span>
+
+          <strong>
+            SAMIM AKTAR (SSK)
+          </strong>
+
+        </div>
+
+        <div class="checks">
+
+          <div class="check">
+            <i class="fa-solid fa-circle-check"></i>
+            Completely safe and free!
+          </div>
+
+          <div class="check">
+            <i class="fa-solid fa-share-nodes"></i>
+            Share with your friends!
+          </div>
+
+          <div class="check">
+            <i class="fa-solid fa-graduation-cap"></i>
+            Learn, explore and stay updated.
+          </div>
+
+        </div>
+
+        <div class="actions">
+
+          <a
+            class="btn primary"
+            href="https://t.me/hexcaweb"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i class="fa-brands fa-telegram"></i>
+            Contact Telegram
+          </a>
+
+          <button
+            class="btn"
+            onclick="showPage('bio')"
+          >
+            <i class="fa-solid fa-user"></i>
+            My Bio
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- SEARCH -->
+
+      <div class="search-box">
+
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+        <input
+          id="globalSearch"
+          type="search"
+          placeholder="Search APKs, Videos, Social links..."
+          oninput="globalSearch(this.value)"
+        >
+
+      </div>
+
+
+      <!-- VIDEOS -->
+
+      <div class="section-title">
+
+        <h2>MY YOUTUBE VIDEOS</h2>
+
+        <p>
+          Latest videos from Hexca Web
+        </p>
+
+      </div>
+
+      <div id="videoGrid" class="grid"></div>
+
+    </section>
+
+
+    <!-- SOCIAL -->
+
+    <section id="social" class="page">
+
+      <div class="section-title">
+
+        <h2>SOCIAL MEDIA</h2>
+
+        <p>
+          Connect with Hexca Web
+        </p>
+
+      </div>
+
+      <div id="socialGrid" class="grid"></div>
+
+    </section>
+
+
+    <!-- APK -->
+
+    <section id="apk" class="page">
+
+      <div class="section-title">
+
+        <h2>APK LINKS</h2>
+
+        <p>
+          Available app links
+        </p>
+
+      </div>
+
+      <div id="apkGrid" class="grid"></div>
+
+    </section>
+
+
+    <!-- ABOUT -->
+
+    <section id="about" class="page">
+
+      <div class="section-title">
+
+        <h2>ABOUT</h2>
+
+      </div>
+
+      <div class="content-box">
+
+        <h3>HEXCA WEB COMMUNITY</h3>
+
+        <p>
+          Welcome to Hexca Web. This website provides tutorials,
+          educational information, community updates and useful
+          resources.
+        </p>
+
+        <p>
+          Explore the available content and stay updated with
+          the latest community information.
+        </p>
+
+        <p class="disclaimer">
+          Use information responsibly and respect applicable
+          laws and platform rules.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- PRIVACY -->
+
+    <section id="privacy" class="page">
+
+      <div class="section-title">
+
+        <h2>PRIVACY POLICY</h2>
+
+      </div>
+
+      <div class="content-box">
+
+        <h3>PRIVACY</h3>
+
+        <p>
+          This website is designed as a public community
+          information website.
+        </p>
+
+        <p>
+          External services such as YouTube, Telegram and
+          WhatsApp may have their own privacy policies and
+          data practices.
+        </p>
+
+        <h3>DISCLAIMER</h3>
+
+        <p class="disclaimer">
+          Content is educational and informational. We do not
+          encourage illegal activity, unauthorized access,
+          malware, or abuse of any service.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- BIO -->
+
+    <section id="bio" class="page">
+
+      <div class="section-title">
+
+        <h2>MY BIO</h2>
+
+        <p>
+          About me
+        </p>
+
+      </div>
+
+      <div class="content-box bio-card">
+
+        <img
+          src="logo1.png"
+          alt="Hexca Web"
+          class="bio-logo"
+          onerror="this.src='logo.png'"
+        >
+
+        <div class="bio-name">
+          SAMIM AKTAR (SSK)
+        </div>
+
+        <div class="bio-info">
+
+          <div class="bio-row">
+            <strong>Education:</strong>
+            <br>
+            B.A. — Currently pursuing / final stage
+          </div>
+
+          <div class="bio-row">
+            <strong>Location:</strong>
+            <br>
+            West Bengal, India
+          </div>
+
+          <div class="bio-row">
+            <strong>Introduction:</strong>
+            <br>
+            Assalamualaikum brother.
+            Welcome to my personal bio.
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================= -->
+
+  <footer>
+
+    <img
+      src="logo.png"
+      alt="Hexca Web"
+      class="footer-logo"
+      onerror="this.style.display='none'"
+    >
+
+    <div>
+      © 2026 Hexca Web • All Rights Reserved.
+    </div>
+
+    <div class="footer-social">
+
+      <a
+        href="https://youtube.com/@hexcaweb2.0"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="YouTube"
+      >
+        <i class="fa-brands fa-youtube"></i>
+      </a>
+
+      <a
+        href="https://t.me/hexcaweb"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Telegram"
+      >
+        <i class="fa-brands fa-telegram"></i>
+      </a>
+
+      <a
+        href="https://whatsapp.com/channel/0029VbCkGkM7j6g2U3Vu0z3y"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="WhatsApp"
+      >
+        <i class="fa-brands fa-whatsapp"></i>
+      </a>
+
+    </div>
+
+    <div>
+      TOTAL VISITS: <span id="visitCount">Loading...</span>
+    </div>
+
+  </footer>
+
+
+  <!-- =========================
+       MOBILE NAV
+  ========================= -->
+
+  <div class="mobile-nav">
+
+    <div class="mobile-nav-inner">
+
+      <a
+        href="#home"
+        data-page="home"
+        class="active"
+        onclick="showPage('home')"
+      >
+        <i class="fa-solid fa-house"></i>
+        HOME
+      </a>
+
+      <a
+        href="#social"
+        data-page="social"
+        onclick="showPage('social')"
+      >
+        <i class="fa-solid fa-share-nodes"></i>
+        SOCIAL
+      </a>
+
+      <a
+        href="#apk"
+        data-page="apk"
+        onclick="showPage('apk')"
+      >
+        <i class="fa-brands fa-android"></i>
+        APK
+      </a>
+
+      <a
+        href="#bio"
+        data-page="bio"
+        onclick="showPage('bio')"
+      >
+        <i class="fa-solid fa-user"></i>
+        MY BIO
+      </a>
+
+      <button
+        class="more-btn"
+        onclick="toggleMore()"
+      >
+        <i class="fa-solid fa-bars"></i>
+        MORE
+      </button>
+
+    </div>
+
+    <div id="moreMenu" class="more-menu">
+
+      <a
+        href="#about"
+        onclick="showPage('about'); toggleMore();"
+      >
+        <i class="fa-solid fa-circle-info"></i>
+        ABOUT
+      </a>
+
+      <a
+        href="#privacy"
+        onclick="showPage('privacy'); toggleMore();"
+      >
+        <i class="fa-solid fa-shield-halved"></i>
+        PRIVACY
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       APK MODAL
+  ========================= -->
+
+  <div id="apkModal" class="modal">
+
+    <div class="modal-box">
+
+      <button
+        class="modal-close"
+        onclick="closeModal()"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h2 id="modalTitle">
+        APK DETAILS
+      </h2>
+
+      <div id="modalContent"></div>
+
+    </div>
+
+  </div>
+
+
+  <script>
+    /* =========================================
+       BASIC DATA
+       ========================================= */
+
+    const socialData = [
+      {
+        name: "YouTube",
+        icon: "fa-brands fa-youtube",
+        description: "Watch Hexca Web tutorials and videos.",
+        url: "https://youtube.com/@hexcaweb2.0"
+      },
+
+      {
+        name: "Telegram",
+        icon: "fa-brands fa-telegram",
+        description: "Join the Hexca Web Telegram community.",
+        url: "https://t.me/hexcaweb"
+      },
+
+      {
+        name: "WhatsApp",
+        icon: "fa-brands fa-whatsapp",
+        description: "Follow the Hexca Web WhatsApp channel.",
+        url: "https://whatsapp.com/channel/0029VbCkGkM7j6g2U3Vu0z3y"
+      }
+    ];
+
+
+    /*
+      Add public APK data here if required.
+
+      Example:
+
+      {
+        name: "Example App",
+        version: "v1.0",
+        size: "50 MB",
+        category: "Entertainment",
+        publisher: "Example",
+        requirements: "Android 7+",
+        price: "Free",
+        icon: "fa-brands fa-android",
+        download: "https://example.com/file.apk",
+        description: "Example description."
+      }
+    */
+
+    const apkData = [];
+
+
+    /*
+      Add public YouTube videos here.
+
+      Use the YouTube video ID.
+
+      Example:
+
+      {
+        title: "Hexca Web Tutorial",
+        id: "VIDEO_ID"
+      }
+    */
+
+    const videoData = [];
+
+
+    /* =========================================
+       PAGE NAVIGATION
+       ========================================= */
+
+    function showPage(page) {
+
+      document.querySelectorAll(".page").forEach(section => {
+        section.classList.remove("active");
+      });
+
+      const target = document.getElementById(page);
+
+      if (target) {
+        target.classList.add("active");
+      }
+
+      document.querySelectorAll(
+        "nav a[data-page], .mobile-nav a[data-page]"
+      ).forEach(link => {
+
+        link.classList.toggle(
+          "active",
+          link.dataset.page === page
+        );
+
+      });
+
+      history.replaceState(null, "", "#" + page);
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+
+    /* =========================================
+       SOCIAL RENDER
+       ========================================= */
+
+    function renderSocial(list = socialData) {
+
+      const grid = document.getElementById("socialGrid");
+
+      if (!list.length) {
+
+        grid.innerHTML = `
+          <div class="empty">
+            No social links available.
+          </div>
+        `;
+
+        return;
+      }
+
+      grid.innerHTML = list.map(item => `
+
+        <div class="card searchable">
+
+          <div class="card-icon">
+            <i class="${escapeHTML(item.icon)}"></i>
+          </div>
+
+          <h3>${escapeHTML(item.name)}</h3>
+
+          <p>
+            ${escapeHTML(item.description)}
+          </p>
+
+          <a
+            class="card-btn"
+            href="${safeURL(item.url)}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Visit <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+
+        </div>
+
+      `).join("");
+    }
+
+
+    /* =========================================
+       APK RENDER
+       ========================================= */
+
+    function renderAPK(list = apkData) {
+
+      const grid = document.getElementById("apkGrid");
+
+      if (!list.length) {
+
+        grid.innerHTML = `
+          <div class="empty">
+            No APK links available.
+          </div>
+        `;
+
+        return;
+      }
+
+      grid.innerHTML = list.map((item, index) => `
+
+        <div class="card searchable">
+
+          <div class="apk-icon">
+
+            ${
+              item.icon && item.icon.startsWith("http")
+              ? `<img
+                   src="${safeURL(item.icon)}"
+                   alt=""
+                   style="width:100%;height:100%;object-fit:contain;"
+                 >`
+              : `<i class="${escapeHTML(
+                  item.icon || "fa-brands fa-android"
+                )}"></i>`
+            }
+
+          </div>
+
+          <h3>${escapeHTML(item.name || "Application")}</h3>
+
+          <p>
+            ${escapeHTML(item.description || "Application information.")}
+          </p>
+
+          <div class="apk-meta">
+
+            ${
+              item.version
+              ? `<span class="tag">${escapeHTML(item.version)}</span>`
+              : ""
+            }
+
+            ${
+              item.size
+              ? `<span class="tag">${escapeHTML(item.size)}</span>`
+              : ""
+            }
+
+            ${
+              item.category
+              ? `<span class="tag">${escapeHTML(item.category)}</span>`
+              : ""
+            }
+
+          </div>
+
+          <button
+            class="btn"
+            style="margin-top:15px;width:100%;"
+            onclick="openAPK(${index})"
+          >
+            <i class="fa-solid fa-circle-info"></i>
+            View Details
+          </button>
+
+        </div>
+
+      `).join("");
+    }
+
+
+    /* =========================================
+       VIDEO RENDER
+       ========================================= */
+
+    function renderVideos(list = videoData) {
+
+      const grid = document.getElementById("videoGrid");
+
+      if (!list.length) {
+
+        grid.innerHTML = `
+          <div class="empty">
+            No YouTube videos available yet.
+          </div>
+        `;
+
+        return;
+      }
+
+      grid.innerHTML = list.map(item => `
+
+        <div class="card video-card searchable">
+
+          <iframe
+            src="https://www.youtube.com/embed/${encodeURIComponent(item.id)}"
+            title="${escapeHTML(item.title)}"
+            loading="lazy"
+            allowfullscreen
+          ></iframe>
+
+          <div class="video-title">
+            ${escapeHTML(item.title)}
+          </div>
+
+        </div>
+
+      `).join("");
+    }
+
+
+    /* =========================================
+       APK DETAILS
+       ========================================= */
+
+    function openAPK(index) {
+
+      const item = apkData[index];
+
+      if (!item) return;
+
+      document.getElementById("modalTitle").textContent =
+        item.name || "APK DETAILS";
+
+      document.getElementById("modalContent").innerHTML = `
+
+        <div class="card" style="box-shadow:none;">
+
+          ${
+            item.version
+            ? `<p><strong style="color:var(--green);">Version:</strong>
+               ${escapeHTML(item.version)}</p>`
+            : ""
+          }
+
+          ${
+            item.size
+            ? `<p><strong style="color:var(--green);">Size:</strong>
+               ${escapeHTML(item.size)}</p>`
+            : ""
+          }
+
+          ${
+            item.category
+            ? `<p><strong style="color:var(--green);">Category:</strong>
+               ${escapeHTML(item.category)}</p>`
+            : ""
+          }
+
+          ${
+            item.publisher
+            ? `<p><strong style="color:var(--green);">Publisher:</strong>
+               ${escapeHTML(item.publisher)}</p>`
+            : ""
+          }
+
+          ${
+            item.requirements
+            ? `<p><strong style="color:var(--green);">Requirements:</strong>
+               ${escapeHTML(item.requirements)}</p>`
+            : ""
+          }
+
+          ${
+            item.price
+            ? `<p><strong style="color:var(--green);">Price:</strong>
+               ${escapeHTML(item.price)}</p>`
+            : ""
+          }
+
+          ${
+            item.description
+            ? `
+              <p style="margin-top:15px;">
+                ${escapeHTML(item.description)}
+              </p>
+            `
+            : ""
+          }
+
+          ${
+            item.download
+            ? `
+              <a
+                class="btn primary"
+                style="width:100%;margin-top:18px;"
+                href="${safeURL(item.download)}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i class="fa-solid fa-download"></i>
+                DOWNLOAD APK
+              </a>
+            `
+            : ""
+          }
+
+        </div>
+      `;
+
+      document.getElementById("apkModal").classList.add("show");
+    }
+
+
+    function closeModal() {
+      document.getElementById("apkModal").classList.remove("show");
+    }
+
+
+    document.getElementById("apkModal").addEventListener(
+      "click",
+      function(e) {
+
+        if (e.target === this) {
+          closeModal();
+        }
+
+      }
+    );
+
+
+    /* =========================================
+       SEARCH
+       ========================================= */
+
+    function globalSearch(value) {
+
+      const query = value.trim().toLowerCase();
+
+      if (!query) {
+        renderSocial();
+        renderAPK();
+        renderVideos();
+        return;
+      }
+
+      const filteredSocial = socialData.filter(item =>
+        `${item.name} ${item.description}`
+          .toLowerCase()
+          .includes(query)
+      );
+
+      const filteredAPK = apkData.filter(item =>
+        JSON.stringify(item)
+          .toLowerCase()
+          .includes(query)
+      );
+
+      const filteredVideos = videoData.filter(item =>
+        JSON.stringify(item)
+          .toLowerCase()
+          .includes(query)
+      );
+
+      renderSocial(filteredSocial);
+      renderAPK(filteredAPK);
+      renderVideos(filteredVideos);
+    }
+
+
+    /* =========================================
+       MORE MENU
+       ========================================= */
+
+    function toggleMore() {
+
+      document
+        .getElementById("moreMenu")
+        .classList.toggle("show");
+
+    }
+
+
+    /* =========================================
+       SECURITY / URL HELPERS
+       ========================================= */
+
+    function safeURL(url) {
+
+      try {
+
+        const parsed = new URL(url);
+
+        if (
+          parsed.protocol === "http:" ||
+          parsed.protocol === "https:"
+        ) {
+          return parsed.href;
+        }
+
+      } catch (error) {}
+
+      return "#";
+    }
+
+
+    function escapeHTML(value) {
+
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* =========================================
+       VISIT COUNTER
+       ========================================= */
+
+    let visits = Number(
+      localStorage.getItem("hexca_web_visits") || "0"
+    );
+
+    visits++;
+
+    localStorage.setItem(
+      "hexca_web_visits",
+      String(visits)
+    );
+
+    document.getElementById("visitCount").textContent =
+      visits.toLocaleString();
+
+
+    /* =========================================
+       LOADER
+       ========================================= */
+
+    let count = 5;
+
+    const countdownElement =
+      document.getElementById("countdown");
+
+    const loader =
+      document.getElementById("loader");
+
+    const loaderTimer = setInterval(() => {
+
+      count--;
+
+      countdownElement.textContent = count;
+
+      if (count <= 0) {
+
+        clearInterval(loaderTimer);
+
+        loader.classList.add("hide");
+
+        const hash =
+          location.hash.replace("#", "").toLowerCase();
+
+        if (
+          ["home", "social", "apk", "about", "privacy", "bio"]
+            .includes(hash)
+        ) {
+          showPage(hash);
+        } else {
+          showPage("home");
+        }
+
+      }
+
+    }, 1000);
+
+
+    /* =========================================
+       INITIAL RENDER
+       ========================================= */
+
+    renderSocial();
+    renderAPK();
+    renderVideos();
+
+
+    /* =========================================
+       HASH NAVIGATION
+       ========================================= */
+
+    window.addEventListener("hashchange", () => {
+
+      const page =
+        location.hash.replace("#", "").toLowerCase();
+
+      if (
+        ["home", "social", "apk", "about", "privacy", "bio"]
+          .includes(page)
+      ) {
+        showPage(page);
+      }
+
+    });
+
+
+    /* =========================================
+       ESC KEY
+       ========================================= */
+
+    document.addEventListener("keydown", e => {
+
+      if (e.key === "Escape") {
+        closeModal();
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>
